@@ -2,6 +2,7 @@ package com.example.jscode.security;
 
 
 import com.example.jscode.dto.MemberRequestDTO;
+import com.example.jscode.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -20,18 +21,18 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class JsonWebTokenService {
-   private final UserDetailsService userDetailsService;
+   private final SecurityUserDetailService userDetailsService;
    private String secretKey = "test";
    private long expiredDate = 30 * 60 * 1000L;
    private SecurityConfig securityConfig;
-
-
-   public String tokenIssuance(MemberRequestDTO memberRequestDTO){
+   public String tokenIssuance(MemberRequestDTO memberRequestDTO, Long id){
       return Jwts.builder()
               .setHeaderParam("typ","JWT")//토큰타입
               .setSubject("userToken")
               .setExpiration(new Date(System.currentTimeMillis()+expiredDate))//토큰유효시간
-              .claim("memberRequestDTO",memberRequestDTO.getPassword())
+              .claim("password",memberRequestDTO.getPassword())
+              .claim("email",memberRequestDTO.getEmail())
+              .claim("id",id)
               .signWith(SignatureAlgorithm.HS256,secretKey)
               .compact();
    }
@@ -45,7 +46,16 @@ public class JsonWebTokenService {
 
    // 토큰에서 회원 정보 추출
    public String getUserName (String token) {
-      return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+     Claims claims=Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+     String email = claims.get("email", String.class);
+     return email;
+   }
+   public Member getUser (String token) {
+      Claims claims=Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+     Long id = claims.get("id", Long.class);
+     String password =claims.get("password", String.class);
+      String email = claims.get("email", String.class);
+      return new Member(id,password,email);
    }
 
    // Request의 Header에서 token 값을 가져옵니다. "TOKEN": "TOKEN 값"

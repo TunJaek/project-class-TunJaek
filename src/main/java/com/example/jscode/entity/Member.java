@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Builder
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,18 +28,26 @@ public class Member {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "joinTime", nullable = false)
+    @Column(name = "joinTime")
     @CreatedDate
     private LocalDateTime joinTime;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
     @Builder
-    public Member(String password, String email, LocalDateTime joinTime) {
-        this.password = password;
-        this.email = email;
-        this.joinTime = joinTime;
+    public Member(String password, String email, LocalDateTime joinTime){
+        this.password=password;
+        this.email=email;
+        this.joinTime=joinTime.now();
     }
+    public Member(Long id, String password, String email){
+        this.id=id;
+        this.password=password;
+        this.email=email;
+    }
+
+
+
+
 }

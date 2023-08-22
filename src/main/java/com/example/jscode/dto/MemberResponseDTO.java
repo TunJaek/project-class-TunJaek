@@ -11,13 +11,15 @@ public class MemberResponseDTO {
 
     private Long id;
     private String email;
+    private String password;
 
-    public MemberResponseDTO(Long id, String email){
+    public MemberResponseDTO(Long id, String email,String password){
         this.id=id;
         this.email=email;
+        this.password=password;
     }
     public static MemberResponseDTO from(Member member){
-        return  new MemberResponseDTO(member.getId(), member.getEmail());
+        return  new MemberResponseDTO(member.getId(), member.getEmail(), member.getPassword());
     }
 
 }

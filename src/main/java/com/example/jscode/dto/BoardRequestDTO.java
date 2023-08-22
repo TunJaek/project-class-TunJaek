@@ -22,7 +22,6 @@ public class BoardRequestDTO {
 
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-mm-dd")
         private LocalDateTime createTime;
-        public BoardRequestDTO(){}
 
         @Builder
         public BoardRequestDTO(String boardTitle, String boardContents,LocalDateTime createTime){
