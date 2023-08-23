@@ -31,4 +31,16 @@ public class Board {
     @CreatedDate
     @Column(name="createdTime")
     private LocalDateTime createdTime;
+
+    @Builder
+    public Board(String boardTitle, String boardContents, LocalDateTime createdTime) {
+        this.boardTitle = boardTitle;
+        this.boardContents = boardContents;
+        this.createdTime = LocalDateTime.now();
+    }
+
+    public void modify(String boardTitle, String boardContents) {
+        this.boardTitle = boardTitle;
+        this.boardContents = boardContents;
+    }
 }
